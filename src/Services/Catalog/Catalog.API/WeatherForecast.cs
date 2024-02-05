@@ -1,4 +1,4 @@
-namespace Calalog.API
+namespace Catalog.API
 {
     public class WeatherForecast
     {
