@@ -103,3 +103,20 @@ services:
       - discountdb
     ports:
       - "8003:8080"
+
+  ordering.api:
+    container_name: ordering.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - "ConnectionStrings:OrderingConnectionString=Server=orderdb;Database=Orderdb;User Id=sa;Password=OPENsesami1910;Encrypt=false;"
+    depends_on:
+      - orderdb
+    
+    ports:
+      - "8084:8080"
+
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
