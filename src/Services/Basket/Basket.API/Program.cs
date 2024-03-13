@@ -1,4 +1,5 @@
 using Basket.API.GrpcServices;
+using Basket.API.Mapper;
 using Basket.API.Repositories;
 using Discount.Grpc.Protos;
 using MassTransit;
@@ -16,7 +17,7 @@ builder.Services.AddStackExchangeRedisCache(opt =>
 
 //General Configurations
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
-
+builder.Services.AddAutoMapper(typeof(BasketProfile));
 
 //Registering DiscountGrpcService
 builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(opt =>

@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.49.0" />
     <PackageReference Include="MassTransit" Version="7.1.6" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.1.6" />
