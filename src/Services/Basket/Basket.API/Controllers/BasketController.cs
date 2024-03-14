@@ -3,6 +3,7 @@ using Basket.API.Entities;
 using Basket.API.GrpcServices;
 using Basket.API.Repositories;
 using EventBus.Message.Events;
+using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -16,12 +17,14 @@ namespace Basket.API.Controllers
         private readonly IBasketRepository _repository;
         private readonly DiscountGrpcService _discountGrpcService;
         private readonly IMapper _mapper;
+        private readonly IPublishEndpoint _publishEndpoint;
 
-        public BasketController(IBasketRepository repository, DiscountGrpcService discountGrpcService, IMapper mapper)
+        public BasketController(IBasketRepository repository, DiscountGrpcService discountGrpcService, IMapper mapper, IPublishEndpoint publishEndpoint)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _discountGrpcService = discountGrpcService ?? throw new ArgumentNullException(nameof(discountGrpcService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _publishEndpoint = publishEndpoint ?? throw new ArgumentNullException(nameof(publishEndpoint));
         }
 
         [HttpGet("{userName}", Name = "GetBasket")]
@@ -64,15 +67,16 @@ namespace Basket.API.Controllers
         {
             //get exisiting basket with total price
 
-            var basket = _repository.GetBasket(basketCheckout.UserName);
+            var basket = await _repository.GetBasket(basketCheckout.UserName);
             if (basket == null)
                 return BadRequest();
 
 
             //Set TotalPrice on basketCheckout eventMessage -- Set TotalPrice on basketCheckout eventMessage
             var eventMessage = _mapper.Map<BasketCheckoutEvent>(basketCheckout);
-
+            eventMessage.TotalPrice = basket.TotalPrice;
             //send checkout event to rabbitmq
+            await _publishEndpoint.Publish(eventMessage);
 
             //remove the basket
             await _repository.DeleteBasket(basketCheckout.UserName);
