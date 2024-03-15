@@ -21,6 +21,7 @@
 	<PackageReference Include="MassTransit" Version="7.1.6" />
 	<PackageReference Include="MassTransit.AspNetCore" Version="7.1.6" />
 	<PackageReference Include="MassTransit.RabbitMQ" Version="7.1.6" />
+	<PackageReference Include="AutoMapper" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>

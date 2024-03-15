@@ -2,6 +2,7 @@ using EventBus.Message.Common;
 using MassTransit;
 using Ordering.API.EventBusConsumer;
 using Ordering.API.Extensions;
+using Ordering.API.Mapping;
 using Ordering.Application;
 using Ordering.Infrastructure;
 using Ordering.Infrastructure.Persistence;
@@ -29,6 +30,11 @@ builder.Services.AddMassTransit(config =>
 });
 
 builder.Services.AddMassTransitHostedService();
+
+//Automapper Configuration
+builder.Services.AddAutoMapper(typeof(OrderingProfile));
+builder.Services.AddScoped<BasketCheckoutConsumer>();
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
